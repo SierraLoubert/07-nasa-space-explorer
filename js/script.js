@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY";
+const apiKey = "9DmCkeH1fNTXXpcOh0OJLoY9oJiHDIOGPqW9Sp4z";
 // Find our date picker inputs on the page
 const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');

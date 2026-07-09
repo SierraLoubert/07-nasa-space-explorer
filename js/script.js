@@ -52,33 +52,17 @@ async function getSpaceImages() {
             const card = document.createElement("div");
             card.classList.add("gallery-item");
 
+            const imageContent = photo.media_type === "image"
+                ? `<img src="${photo.url}" alt="${photo.title}">`
+                : `<a href="${photo.url}" target="_blank" rel="noopener noreferrer">Watch NASA Video</a>`;
+
             card.innerHTML = `
-                <img src="${photo.url}" alt="${photo.title}">
-                <h3>${photo.title}</h3>
-                <p>${photo.date}</p>
+                ${imageContent}
+                <h3>Title: ${photo.title}</h3>
+                <p>Posted: ${photo.date}</p>
             `;
 
             gallery.appendChild(card);
-
-            if(photo.media_type === "image"){
-
-    card.innerHTML = `
-        <img src="${photo.url}">
-        <h3>${photo.title}</h3>
-        <p>${photo.date}</p>
-    `;
-
-}else{
-
-    card.innerHTML = `
-        <h3>${photo.title}</h3>
-        <p>${photo.date}</p>
-        <a href="${photo.url}" target="_blank">
-            Watch NASA Video
-        </a>
-    `;
-
-}
         });
 
     } catch (error) {

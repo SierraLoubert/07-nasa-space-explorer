@@ -9,9 +9,6 @@ setupDateInputs(startInput, endInput);
 
 button.addEventListener("click", getSpaceImages);
 
-const randomFact =
-spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
-
 const spaceFacts = [
 
 "Did you know? A day on Venus is longer than a year on Venus.",
@@ -26,10 +23,14 @@ const spaceFacts = [
 
 ];
 
+const randomFact = spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
+
 const factBox =
 document.getElementById("spaceFact");
 
-factBox.textContent = randomFact;
+if (factBox) {
+    factBox.textContent = `Fun Fact: ${randomFact}`;
+}
 
 async function getSpaceImages() {
 
@@ -64,12 +65,14 @@ async function getSpaceImages() {
     card.innerHTML = `
         <img src="${photo.url}">
         <h3>${photo.title}</h3>
+        <p>${photo.date}</p>
     `;
 
 }else{
 
     card.innerHTML = `
         <h3>${photo.title}</h3>
+        <p>${photo.date}</p>
         <a href="${photo.url}" target="_blank">
             Watch NASA Video
         </a>

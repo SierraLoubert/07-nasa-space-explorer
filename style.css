@@ -142,6 +142,26 @@ button:hover {
   color: #666;
 }
 
+/* Fun fact section */
+.space-fact,
+#spaceFact {
+  color: #000;
+}
+
+.space-fact {
+  padding: 0 20px 20px;
+  text-align: center;
+}
+
+.space-fact p {
+  margin: 0;
+}
+
+/* Loading message */
+.gallery > p {
+  color: #000;
+}
+
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;

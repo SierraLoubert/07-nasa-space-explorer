@@ -4,10 +4,43 @@ const startInput = document.getElementById("startDate");
 const endInput = document.getElementById("endDate");
 const gallery = document.getElementById("gallery");
 const button = document.getElementById("getImagesBtn");
+const modal = document.getElementById("imageModal");
+const modalImage = document.getElementById("modalImage");
+const modalVideoContainer = document.getElementById("modalVideoContainer");
+const modalVideo = document.getElementById("modalVideo");
+const modalTitle = document.getElementById("modalTitle");
+const modalDate = document.getElementById("modalDate");
+const modalExplanation = document.getElementById("modalExplanation");
+const modalVideoLink = document.getElementById("modalVideoLink");
+const closeModalBtn = document.getElementById("closeModalBtn");
 
 setupDateInputs(startInput, endInput);
 
 button.addEventListener("click", getSpaceImages);
+
+if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeImageModal);
+}
+
+if (modal) {
+    modal.addEventListener("click", event => {
+        if (event.target.matches("[data-modal-close]")) {
+            closeImageModal();
+        }
+    });
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closeImageModal();
+    }
+});
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+});
 
 const spaceFacts = [
 
@@ -32,6 +65,81 @@ if (factBox) {
     factBox.textContent = `Fun Fact: ${randomFact}`;
 }
 
+function getYouTubeVideoId(url) {
+    const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]+)/);
+
+    return match ? match[1] : "";
+}
+
+function getYouTubeThumbnail(url) {
+    const videoId = getYouTubeVideoId(url);
+
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "";
+}
+
+function getYouTubeEmbedUrl(url) {
+    const videoId = getYouTubeVideoId(url);
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+}
+
+function getVideoEmbedUrl(url) {
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        return getYouTubeEmbedUrl(url);
+    }
+
+    return "";
+}
+
+function openImageModal(photo) {
+    if (!modal || !modalImage || !modalVideoContainer || !modalVideo || !modalTitle || !modalDate || !modalExplanation || !modalVideoLink) {
+        return;
+    }
+
+    const formattedDate = dateFormatter.format(new Date(`${photo.date}T00:00:00`));
+    const isVideo = photo.media_type === "video";
+    const videoEmbedUrl = isVideo ? getVideoEmbedUrl(photo.url) : "";
+
+    modalImage.hidden = isVideo;
+    modalVideoContainer.hidden = !isVideo;
+    modalVideoLink.hidden = true;
+    modalVideo.src = "";
+
+    if (isVideo && videoEmbedUrl) {
+        modalVideo.src = videoEmbedUrl;
+    } else if (isVideo) {
+        modalVideoLink.hidden = false;
+        modalVideoLink.innerHTML = `<a href="${photo.url}" target="_blank" rel="noopener noreferrer">Open video in a new tab</a>`;
+    }
+
+    if (!isVideo) {
+        modalImage.src = photo.hdurl || photo.url;
+        modalImage.alt = photo.title;
+    } else {
+        modalImage.src = "";
+        modalImage.alt = "";
+    }
+
+    modalTitle.textContent = photo.title;
+    modalDate.textContent = `Date: ${formattedDate}`;
+    modalExplanation.textContent = photo.explanation;
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+}
+
+function closeImageModal() {
+    if (!modal || !modalVideo) {
+        return;
+    }
+
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    modalVideo.src = "";
+}
+
 async function getSpaceImages() {
 
     const startDate = startInput.value;
@@ -40,7 +148,7 @@ async function getSpaceImages() {
     const url =
         `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startDate}&end_date=${endDate}`;
 
-    gallery.innerHTML = "<p>🔄 Loading space photos...</p>";
+    gallery.innerHTML = "<p>Loading space photos...</p>";
 
     try {
         const response = await fetch(url);
@@ -51,16 +159,39 @@ async function getSpaceImages() {
         data.forEach(photo => {
             const card = document.createElement("div");
             card.classList.add("gallery-item");
+            const postedDate = dateFormatter.format(new Date(`${photo.date}T00:00:00`));
 
-            const imageContent = photo.media_type === "image"
-                ? `<img src="${photo.url}" alt="${photo.title}">`
-                : `<a href="${photo.url}" target="_blank" rel="noopener noreferrer">Watch NASA Video</a>`;
+            const isVideo = photo.media_type === "video";
+            const videoThumbnail = photo.thumbnail_url || getYouTubeThumbnail(photo.url);
+            const mediaContent = isVideo
+                ? videoThumbnail
+                    ? `<button type="button" class="media-button"><img src="${videoThumbnail}" alt="Thumbnail for ${photo.title}"></button>`
+                    : `<p><button type="button" class="text-button">Watch video</button></p>`
+                : `<img src="${photo.url}" alt="${photo.title}">`;
+
+            const titleContent = isVideo
+                ? `<h3><button type="button" class="text-button">${photo.title}</button></h3>`
+                : `<h3>Title: ${photo.title}</h3>`;
 
             card.innerHTML = `
-                ${imageContent}
-                <h3>Title: ${photo.title}</h3>
-                <p>Posted: ${photo.date}</p>
+                    ${mediaContent}
+                    ${titleContent}
+                <p>Posted: ${postedDate}</p>
             `;
+
+            if (photo.media_type === "image") {
+                const image = card.querySelector("img");
+
+                if (image) {
+                    image.addEventListener("click", () => openImageModal(photo));
+                }
+            }
+
+            if (photo.media_type === "video") {
+                card.querySelectorAll("button").forEach(buttonElement => {
+                    buttonElement.addEventListener("click", () => openImageModal(photo));
+                });
+            }
 
             gallery.appendChild(card);
         });

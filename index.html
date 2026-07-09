@@ -29,6 +29,21 @@
         <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
       </div>
     </div>
+
+    <div id="imageModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+      <div class="modal-backdrop" data-modal-close></div>
+      <div class="modal-content" role="document">
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close image details">&times;</button>
+        <img id="modalImage" src="" alt="" />
+        <div id="modalVideoContainer" class="modal-video-container" hidden>
+          <iframe id="modalVideo" title="APOD video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDate"></p>
+        <p id="modalExplanation"></p>
+        <p id="modalVideoLink" class="modal-video-link" hidden></p>
+      </div>
+    </div>
   </div>
 
   <script src="js/dateRange.js"></script>

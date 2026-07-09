@@ -9,6 +9,9 @@ setupDateInputs(startInput, endInput);
 
 button.addEventListener("click", getSpaceImages);
 
+const randomFact =
+spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
+
 const spaceFacts = [
 
 "Did you know? A day on Venus is longer than a year on Venus.",
@@ -22,6 +25,11 @@ const spaceFacts = [
 "Did you know? One million Earths could fit inside the Sun."
 
 ];
+
+const factBox =
+document.getElementById("spaceFact");
+
+factBox.textContent = randomFact;
 
 async function getSpaceImages() {
 

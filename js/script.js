@@ -202,41 +202,25 @@ async function getSpaceImages() {
               
                 
                 });
-            } 
+            } else {
+                modalImage.src = "img/video-placeholder.jpg"; // Your own placeholder image
+            }
+
+            modalImage.hidden = false;
+            modalImage.alt = photo.title;
+
+            modalVideoContainer.hidden = true;
+
+            modalVideoLink.hidden = false;
+            modalVideoLink.innerHTML = `
+                <p>This video can't be played on this website.</p>
+                <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
+                    Watch on Here
+                </a>
+            `;
+
             gallery.appendChild(card);
         });
-
-    function openImageModal(photo) {
-
-    const isVideo = photo.media_type === "video";
-
-    if (isVideo) {
-
-        modalVideoContainer.hidden = false;
-        modalImage.hidden = true;
-
-        modalVideo.src = photo.url;
-
-        modalVideoLink.hidden = false;
-        modalVideoLink.innerHTML = `
-            <p>If the video doesn't play, use the link below.</p>
-            <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
-                Watch Video in a New Tab
-            </a>
-        `;
-
-    } else {
-
-        modalImage.hidden = false;
-        modalVideoContainer.hidden = true;
-
-        modalImage.src = photo.hdurl || photo.url;
-
-        modalVideoLink.hidden = true;
-    }
-
-    modal.classList.add("is-open");
-}
 
     } catch (error) {
         gallery.innerHTML = "<p>Something went wrong.</p>";

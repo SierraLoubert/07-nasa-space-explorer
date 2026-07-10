@@ -329,6 +329,22 @@ button {
   color: #0b1f3a;
 }
 
+.modal-video-link a:hover {
+  color: #092f70;
+}
+
+.modal-video-link p,
+.modal-video-link a {
+  color: white;
+}
+
+.modal-video-link {
+  background-color: #0b1f3a;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
 .modal-close {
   position: absolute;
   top: 12px;

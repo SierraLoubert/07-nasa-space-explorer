@@ -130,6 +130,10 @@ button:hover {
   cursor: pointer;
 }
 
+.gallery-item h3 {
+  margin-top: 12px;
+}
+
 .media-frame {
   width: 100%;
   aspect-ratio: 16 / 9;

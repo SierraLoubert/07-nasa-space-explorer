@@ -71,13 +71,13 @@ button {
 }
 
 /* Button specific */
-button {
-  background-color: #0B3D91;
-  color: white;
-  cursor: pointer;
+.primary-btn {
+    background-color: #0B3D91;
+    color: white;
 }
-button:hover {
-  background-color: #092f70;
+
+.primary-btn:hover {
+    background-color: #092f70;
 }
 
 /* Stack horizontally on wider screens */

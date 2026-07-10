@@ -15,6 +15,7 @@ body {
 
 /* Centered container */
 .container {
+  background:white;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -66,9 +67,6 @@ button {
 }
 
 /* Button specific */
-.container{
-    background:white;
-}
 button {
   background-color: #d3d3d3;
   color: black;
@@ -113,6 +111,31 @@ button:hover {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.gallery-item {
+    transition: transform .3s, box-shadow .3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 6px solid #ddd;
+    border-top: 6px solid #0B1F3A;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Three columns on wider screens */

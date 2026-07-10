@@ -148,7 +148,12 @@ async function getSpaceImages() {
     const url =
         `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startDate}&end_date=${endDate}`;
 
-    gallery.innerHTML = "<p>Loading space photos...</p>";
+    gallery.innerHTML = `
+    <div class="placeholder">
+        <div class="spinner"></div>
+        <p>Loading NASA images...</p>
+    </div>
+    `;
 
     try {
         const response = await fetch(url);

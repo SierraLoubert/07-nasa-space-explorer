@@ -164,6 +164,16 @@ async function getSpaceImages() {
 
         gallery.innerHTML = "";
 
+        gallery.innerHTML = `
+        <div class="placeholder">
+            <div class="placeholder-icon">🎥</div>
+            <p>This NASA video can't be displayed here.</p>
+            <a href="${photo.url}" target="_blank">
+                Watch it Here
+            </a>
+        </div>
+        `;
+
         data.forEach(photo => {
             console.log(photo);
             const card = document.createElement("div");

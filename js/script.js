@@ -187,7 +187,7 @@ async function getSpaceImages() {
                     <img src="${videoThumbnail}" alt="Thumbnail for ${photo.title}">
                   </button>`
                 : `<button type="button" class="media-button no-image">
-                    <span>🎥 Video in Link Provided</span>
+                    <span>🎥 Video Provided in Link Bellow</span>
                   </button>`
                 : `<img 
                   src="${photo.url}" 

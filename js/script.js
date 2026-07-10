@@ -66,9 +66,12 @@ if (factBox) {
 }
 
 function getYouTubeVideoId(url) {
-    const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]+)/);
+    const regExp =
+        /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?.+&v=)([^#&?]*).*/;
 
-    return match ? match[1] : "";
+    const match = url.match(regExp);
+
+    return match && match[1].length === 11 ? match[1] : "";
 }
 
 function getYouTubeThumbnail(url) {
@@ -162,6 +165,7 @@ async function getSpaceImages() {
         gallery.innerHTML = "";
 
         data.forEach(photo => {
+            console.log(photo);
             const card = document.createElement("div");
             card.classList.add("gallery-item");
             const postedDate = dateFormatter.format(new Date(`${photo.date}T00:00:00`));

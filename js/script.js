@@ -66,12 +66,21 @@ if (factBox) {
 }
 
 function getYouTubeVideoId(url) {
-    const regExp =
-        /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?.+&v=)([^#&?]*).*/;
+    // Handle multiple YouTube URL formats
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+        /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
+        /youtube\.com\/.*[?&]v=([a-zA-Z0-9_-]{11})/
+    ];
 
-    const match = url.match(regExp);
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
 
-    return match && match[1].length === 11 ? match[1] : "";
+    return "";
 }
 
 function getYouTubeThumbnail(url) {
@@ -106,10 +115,10 @@ function openImageModal(photo) {
     modalImage.hidden = isVideo;
     modalVideoContainer.hidden = !isVideo;
     modalVideoLink.hidden = true;
-    modalVideo.src = "";
+    modalVideo.removeAttribute("src");
 
     if (isVideo && videoEmbedUrl) {
-        modalVideo.src = videoEmbedUrl;
+        modalVideo.setAttribute("src", videoEmbedUrl);
     } else if (isVideo) {
         modalVideoLink.hidden = false;
         modalVideoLink.innerHTML = `<a href="${photo.url}" target="_blank" rel="noopener noreferrer">Open video in a new tab</a>`;
@@ -118,6 +127,19 @@ function openImageModal(photo) {
     if (!isVideo) {
         modalImage.src = photo.hdurl || photo.url;
         modalImage.alt = photo.title;
+
+        // Show black box if image fails to load
+        modalImage.onerror = () => {
+            modalImage.style.backgroundColor = "#000";
+            modalImage.style.width = "100%";
+            modalImage.style.minHeight = "400px";
+            modalImage.style.display = "flex";
+            modalImage.style.alignItems = "center";
+            modalImage.style.justifyContent = "center";
+            modalImage.textContent = "Image could not be loaded";
+            modalImage.style.color = "#999";
+            modalImage.style.fontSize = "16px";
+        };
     } else {
         modalImage.src = "";
         modalImage.alt = "";
@@ -140,7 +162,7 @@ function closeImageModal() {
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
-    modalVideo.src = "";
+    modalVideo.removeAttribute("src");
 }
 
 async function getSpaceImages() {

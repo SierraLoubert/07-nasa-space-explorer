@@ -181,10 +181,10 @@ button:hover {
   font-size: 14px;
 }
 
-/*.gallery-item a {
+.gallery-item a {
   color: #0b1f3a;
   margin-top: 10px;
-}*/
+}
 
 .gallery-item button {
   font: inherit;
@@ -209,6 +209,11 @@ button:hover {
 .text-button {
   color: #0b1f3a;
   text-align: left;
+}
+
+.text-button:hover {
+  background: transparent;
+  color: #092f70;
 }
 
 /* Placeholder content */

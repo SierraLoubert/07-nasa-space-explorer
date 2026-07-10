@@ -202,22 +202,7 @@ async function getSpaceImages() {
               
                 
                 });
-            } else {
-                modalImage.src = "img/video-placeholder.jpg"; // Your own placeholder image
-            }
-
-            modalImage.hidden = false;
-            modalImage.alt = photo.title;
-
-            modalVideoContainer.hidden = true;
-
-            modalVideoLink.hidden = false;
-            modalVideoLink.innerHTML = `
-                <p>This video can't be played on this website.</p>
-                <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
-                    Watch on Here
-                </a>
-            `;
+            } 
 
             gallery.appendChild(card);
         });

@@ -198,8 +198,11 @@ button {
   cursor: pointer;
 }
 
+.gallery-item img, 
 .media-button {
   width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .media-button img {
@@ -361,6 +364,25 @@ button {
 
 body.modal-open {
   overflow: hidden;
+}
+
+.no-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #111;
+    color: #aaa;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.broken-image {
+    background: #111;
+    min-height: 250px;
+    object-fit: contain;
 }
 
 @media (max-width: 599px) {

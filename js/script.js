@@ -194,10 +194,17 @@ async function getSpaceImages() {
             const isVideo = photo.media_type === "video";
             const videoThumbnail = photo.thumbnail_url || getYouTubeThumbnail(photo.url);
             const mediaContent = isVideo
-                ? videoThumbnail
-                    ? `<button type="button" class="media-button"><img src="${videoThumbnail}" alt="Thumbnail for ${photo.title}"></button>`
-                    : `<p><button type="button" class="text-button">Watch video</button></p>`
-                : `<img src="${photo.url}" alt="${photo.title}">`;
+            ? videoThumbnail
+                ? `<button type="button" class="media-button">
+                    <img src="${videoThumbnail}" alt="Thumbnail for ${photo.title}">
+                  </button>`
+                : `<button type="button" class="media-button no-image">
+                    <span>🎥 Video Preview</span>
+                  </button>`
+                : `<img 
+                  src="${photo.url}" 
+                  alt="${photo.title}"
+                  onerror="this.classList.add('broken-image')">`;
 
             const titleContent = isVideo
                 ? `<h3><button type="button" class="text-button">${photo.title}</button></h3>`

@@ -128,18 +128,6 @@ function openImageModal(photo) {
         modalImage.src = photo.hdurl || photo.url;
         modalImage.alt = photo.title;
 
-        // Show black box if image fails to load
-        modalImage.onerror = () => {
-            modalImage.style.backgroundColor = "#000";
-            modalImage.style.width = "100%";
-            modalImage.style.minHeight = "400px";
-            modalImage.style.display = "flex";
-            modalImage.style.alignItems = "center";
-            modalImage.style.justifyContent = "center";
-            modalImage.textContent = "Image could not be loaded";
-            modalImage.style.color = "#999";
-            modalImage.style.fontSize = "16px";
-        };
     } else {
         modalImage.src = "";
         modalImage.alt = "";

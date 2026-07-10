@@ -231,8 +231,7 @@ async function getSpaceImages() {
     }
 
     modal.classList.add("is-open");
-    }
 
-    catch (error) {
+    } catch (error) {
         gallery.innerHTML = "<p>Something went wrong.</p>";
     }

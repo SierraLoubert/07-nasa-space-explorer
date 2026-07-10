@@ -207,6 +207,32 @@ async function getSpaceImages() {
             gallery.appendChild(card);
         });
 
+        modalVideoContainer.hidden = false;
+        modalImage.hidden = true;
+
+        modalVideo.src = photo.url;
+
+        modalVideoLink.hidden = false;
+        modalVideoLink.innerHTML = `
+            <p>If the video doesn't play, use the link below.</p>
+            <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
+                Watch Video in a New Tab
+            </a>
+        `;
+
+    } else {
+
+        modalImage.hidden = false;
+        modalVideoContainer.hidden = true;
+
+        modalImage.src = photo.hdurl || photo.url;
+
+        modalVideoLink.hidden = true;
+    }
+
+    modal.classList.add("is-open");
+}
+
     } catch (error) {
         gallery.innerHTML = "<p>Something went wrong.</p>";
     }

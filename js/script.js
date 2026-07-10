@@ -164,16 +164,6 @@ async function getSpaceImages() {
 
         gallery.innerHTML = "";
 
-        gallery.innerHTML = `
-        <div class="placeholder">
-            <div class="placeholder-icon">🎥</div>
-            <p>This NASA video can't be displayed here.</p>
-            <a href="${photo.url}" target="_blank">
-                Watch it Here
-            </a>
-        </div>
-        `;
-
         data.forEach(photo => {
             console.log(photo);
             const card = document.createElement("div");
@@ -209,8 +199,25 @@ async function getSpaceImages() {
             if (photo.media_type === "video") {
                 card.querySelectorAll("button").forEach(buttonElement => {
                     buttonElement.addEventListener("click", () => openImageModal(photo));
+              
+                
                 });
+            } else {
+                modalImage.src = "img/video-placeholder.jpg"; // Your own placeholder image
             }
+
+            modalImage.hidden = false;
+            modalImage.alt = photo.title;
+
+            modalVideoContainer.hidden = true;
+
+            modalVideoLink.hidden = false;
+            modalVideoLink.innerHTML = `
+                <p>This video can't be played on this website.</p>
+                <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
+                    Watch on Here
+                </a>
+            `;
 
             gallery.appendChild(card);
         });

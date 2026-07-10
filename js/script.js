@@ -94,48 +94,35 @@ function getVideoEmbedUrl(url) {
     return "";
 }
 
-ffunction openImageModal(photo) {
+function openImageModal(photo) {
     if (!modal || !modalImage || !modalVideoContainer || !modalVideo || !modalTitle || !modalDate || !modalExplanation || !modalVideoLink) {
         return;
     }
 
     const formattedDate = dateFormatter.format(new Date(`${photo.date}T00:00:00`));
     const isVideo = photo.media_type === "video";
+    const videoEmbedUrl = isVideo ? getVideoEmbedUrl(photo.url) : "";
 
-    // Reset modal
-    modalVideo.src = "";
+    modalImage.hidden = isVideo;
+    modalVideoContainer.hidden = !isVideo;
     modalVideoLink.hidden = true;
-    modalVideoLink.innerHTML = "";
+    modalVideo.src = "";
 
-    if (isVideo) {
-
-        // Show the video
-        modalImage.hidden = true;
-        modalVideoContainer.hidden = false;
-
-        // NASA already gives an embed URL
-        modalVideo.src = photo.url;
-
-        // Always show a backup link
+    if (isVideo && videoEmbedUrl) {
+        modalVideo.src = videoEmbedUrl;
+    } else if (isVideo) {
         modalVideoLink.hidden = false;
-        modalVideoLink.innerHTML = `
-            <p>If the video doesn't play, click the link below.</p>
-            <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
-                Watch Video in a New Tab
-            </a>
-        `;
-
-    } else {
-
-        // Show the image
-        modalImage.hidden = false;
-        modalVideoContainer.hidden = true;
-
-        modalImage.src = photo.hdurl || photo.url;
-        modalImage.alt = photo.title;
+        modalVideoLink.innerHTML = `<a href="${photo.url}" target="_blank" rel="noopener noreferrer">Open video in a new tab</a>`;
     }
 
-    // Information shown for BOTH images and videos
+    if (!isVideo) {
+        modalImage.src = photo.hdurl || photo.url;
+        modalImage.alt = photo.title;
+    } else {
+        modalImage.src = "";
+        modalImage.alt = "";
+    }
+
     modalTitle.textContent = photo.title;
     modalDate.textContent = `Date: ${formattedDate}`;
     modalExplanation.textContent = photo.explanation;
@@ -145,7 +132,106 @@ ffunction openImageModal(photo) {
     document.body.classList.add("modal-open");
 }
 
+function closeImageModal() {
+    if (!modal || !modalVideo) {
+        return;
+    }
+
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    modalVideo.src = "";
+}
+
+async function getSpaceImages() {
+
+    const startDate = startInput.value;
+    const endDate = endInput.value;
+
+    const url =
+        `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startDate}&end_date=${endDate}`;
+
+    gallery.innerHTML = `
+    <div class="placeholder">
+        <div class="spinner"></div>
+        <p>Loading NASA images...</p>
+    </div>
+    `;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        gallery.innerHTML = "";
+
+        data.forEach(photo => {
+            console.log(photo);
+            const card = document.createElement("div");
+            card.classList.add("gallery-item");
+            const postedDate = dateFormatter.format(new Date(`${photo.date}T00:00:00`));
+
+            const isVideo = photo.media_type === "video";
+            const videoThumbnail = photo.thumbnail_url || getYouTubeThumbnail(photo.url);
+            const mediaContent = isVideo
+                ? videoThumbnail
+                    ? `<button type="button" class="media-button"><img src="${videoThumbnail}" alt="Thumbnail for ${photo.title}"></button>`
+                    : `<p><button type="button" class="text-button">Watch video</button></p>`
+                : `<img src="${photo.url}" alt="${photo.title}">`;
+
+            const titleContent = isVideo
+                ? `<h3><button type="button" class="text-button">${photo.title}</button></h3>`
+                : `<h3>Title: ${photo.title}</h3>`;
+
+            card.innerHTML = `
+                    ${mediaContent}
+                    ${titleContent}
+                <p>Posted: ${postedDate}</p>
+            `;
+
+            if (photo.media_type === "image") {
+                const image = card.querySelector("img");
+
+                if (image) {
+                    image.addEventListener("click", () => openImageModal(photo));
+                }
+            }
+
+            if (photo.media_type === "video") {
+                card.querySelectorAll("button").forEach(buttonElement => {
+                    buttonElement.addEventListener("click", () => openImageModal(photo));
+              
+                
+                });
+            } 
+
+            gallery.appendChild(card);
+        });
+
+        modalVideoContainer.hidden = false;
+        modalImage.hidden = true;
+
+        modalVideo.src = photo.url;
+
+        modalVideoLink.hidden = false;
+        modalVideoLink.innerHTML = `
+            <p>If the video doesn't play, use the link below.</p>
+            <a href="${photo.url}" target="_blank" rel="noopener noreferrer">
+                Watch Video in a New Tab
+            </a>
+        `;
+
+    } else {
+
+        modalImage.hidden = false;
+        modalVideoContainer.hidden = true;
+
+        modalImage.src = photo.hdurl || photo.url;
+
+        modalVideoLink.hidden = true;
+    }
+
     modal.classList.add("is-open");
+    }
 
     catch (error) {
         gallery.innerHTML = "<p>Something went wrong.</p>";

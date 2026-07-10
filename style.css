@@ -186,6 +186,21 @@ button:hover {
   margin-top: 10px;
 }
 
+.gallery-item a,
+.modal-video-link a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.gallery-item a:hover,
+.modal-video-link a:hover {
+  background-color: #092f70;
+  color: #fff;
+}
+
 .gallery-item button {
   font: inherit;
 }

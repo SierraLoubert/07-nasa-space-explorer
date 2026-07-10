@@ -76,7 +76,7 @@ button {
   color: white;
   cursor: pointer;
 }
-/*button:hover {
+button:hover {
   background-color: #092f70;
 }
 
@@ -184,6 +184,14 @@ button {
 .gallery-item a {
   color: #0b1f3a;
   margin-top: 10px;
+}
+
+.gallery-item a:hover {
+  color: #092f70;
+}
+
+.modal-video-link a:hover {
+  color: none;
 }
 
 .gallery-item button {
